@@ -1,32 +1,39 @@
-import { Request, Response } from "express";
-import cors from "cors";
+import mongoose from "mongoose";
 import express from "express";
-
-// API ROUTES IMPORTS
+import cors from "cors";
 import userRoutes from "./user/v1/user.routes";
 
-// MIDDLEWARES
 const app = express();
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// ROUTES
 const SERVER_VERSION = "/api/v1/";
 
+// Routes
 app.use(SERVER_VERSION + "users", userRoutes);
 
-// FALLBACKS
-
-function routeNotFound(request: Request, response: Response) {
+// Fallback for non-existing routes
+function routeNotFound(request: express.Request, response: express.Response) {
   response.status(404).json({
-    message: "Route not found.",
+    message: "Route not found",
   });
 }
 
 app.use(routeNotFound);
 
-// START SERVER
-app.listen(8080, () => {
-  console.log("Server listening to port 8080.");
-});
+// Connect to MongoDB
+mongoose
+  .connect("mongodb://localhost:27017/taller04")
+  .then(() => {
+    console.log("Connected to MongoDB");
+
+    // Start server
+    app.listen(8080, () => {
+      console.log("Server listening on port 8080");
+    });
+  })
+  .catch((error) => {
+    console.error("Error connecting to MongoDB:", error);
+  });

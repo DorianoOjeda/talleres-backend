@@ -2,7 +2,10 @@ import userRoutes from "./user/v1/user.routes";
 import express from "express";
 import { Request, Response } from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 
+
+dotenv.config();
 // ROUTES
 const SERVER_VERSION = "/api/v1/";
 
@@ -25,3 +28,5 @@ export default function createApp() {
   app.use(routeNotFound);
   return app;
 }
+
+dotenv.config();
